@@ -5,9 +5,6 @@ BrainBytes is an AI-powered tutoring platform designed to provide accessible aca
 
 ## Team Members
 - John Louie Alova - Team Lead - [lr.jlalova@mmdc.mcl.edu.ph]
-- Jennifer Cerio - Backend Developer - [lr.jecerio@mmdc.mcl.edu.ph]
-- Catherine De Guzman - Frontend Developer - [lr.cdguzman@mmdc.mcl.edu.ph]
-- Krisha Danessa Jusay - DevOps Engineer - [lr.kdjusay@mmdc.mcl.edu.ph]
 
 ## Project Goals
 - Implement a containerized application with proper networking
