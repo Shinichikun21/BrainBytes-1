@@ -1,0 +1,51 @@
+version: '3'
+services:
+  # Frontend container
+  frontend:
+    build: ./brainbytes-multi-container/frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:4000
+    depends_on:
+      - backend
+    networks:
+      - brainbytes-network
+
+
+  # Backend API container
+  backend:
+    build: ./brainbytes-multi-container/backend
+    ports:
+      - "4000:4000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/brainbytes
+      - PORT=4000
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - brainbytes-network
+
+
+  # MongoDB container
+  mongo:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - brainbytes-network
+
+networks:
+  brainbytes-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
