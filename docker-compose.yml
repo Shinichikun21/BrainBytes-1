@@ -4,29 +4,27 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "3000:3000"
-    environment:
-      - NEXT_PUBLIC_API_URL=http://backend:4000
+      - "8080:3000"
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - backend
-    networks:
-      - brainbytes-network
-
+    restart: unless-stopped
 
   # Backend API container
   backend:
     build: ./backend
     ports:
-      - "4000:4000"
+      - "3000:3000"
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
     environment:
-      - MONGO_URI=mongodb://mongo:27017/brainbytes
-      - PORT=4000
+      - HUGGINGFACE_TOKEN=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
     depends_on:
-      mongo:
-        condition: service_healthy
-    networks:
-      - brainbytes-network
-
+      - mongo
+    restart: unless-stopped
 
   # MongoDB container
   mongo:
@@ -34,18 +32,10 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongodb-data:/data/db
-    healthcheck:
-      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - brainbytes-network
+      - mongo-data:/data/db
+    restart: unless-stopped
 
-networks:
-  brainbytes-network:
-    driver: bridge
-
+# Define volumes for persistent data
 volumes:
-  mongodb-data:
+  mongo-data:
+

@@ -4,7 +4,6 @@ const cors = require('cors');
 const aiService = require('./aiService');
 const chatRoutes = require('./routes/chatRoutes');
 
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
