@@ -1,38 +1,49 @@
-name: Brainbytes CI
+name: BrainBytes CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, development ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, development ]
 
 jobs:
-  build:
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [16.20.2]
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v2
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3  # Updated to v3
+      # --- FRONTEND ---
+      - name: Set up Node.js for Frontend
+        uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: '16'
           cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'  # Fixed path pattern
+          cache-dependency-path: ./frontend/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci  # Changed from install to ci for consistency
-
-      - name: Run Lint (optional)
-        run: npm run lint || echo "Linting failed but continuing"
-
-      - name: Run tests
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm install
+      
+      - name: Run frontend tests
+        working-directory: ./frontend
         run: npm test
 
-      - name: Build project
-        run: npm run build
+      # --- BACKEND ---
+      - name: Set up Node.js for Backend
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: 'npm'
+          cache-dependency-path: ./backend/package-lock.json
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm install
+
+      - name: Run backend tests
+        working-directory: ./backend
+        run: npm test
+
