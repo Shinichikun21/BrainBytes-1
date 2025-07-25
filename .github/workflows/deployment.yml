@@ -28,8 +28,8 @@ jobs:
       
       - name: Prepare deployment
         run: |
-          echo "DEPLOY_TIME=$(date)" >> $GITHUB_ENV
-          echo "DEPLOY_SHA=${{ github.sha }}" >> $GITHUB_ENV
+          echo "DEPLOY_TIME=$(date)" 
+          echo "DEPLOY_SHA=${{ github.sha }}" 
       
       - name: Deploy to test environment
         run: |
